@@ -1,0 +1,134 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #ecebeb;
+    font-family: 'Nunito', sans-serif;
+}
+.logo img {
+    width: 320px;
+    margin-bottom: 1rem;
+}
+.login-container {
+    background: #ffffffea;
+    border-radius: 32px;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    width: 300px;
+}
+.highlight {
+    color: #180d6b;
+}
+
+.login-logo i {
+    font-size: 80px;
+    color: #4A60D7;
+    margin-bottom: 20px;
+}
+
+.login-form .input-group {
+    margin-bottom: 15px;
+    position: relative;
+    text-align: left;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+.login-form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 2px solid #CCC;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #CCC;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4A60D7;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color: #3b4cb7;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.links a {
+    color: #4A60D7;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+#share-location-button {
+    background-color: #007bff;
+    color: white;
+}
+
+#mark-attendance-button {
+    background-color: #0b8728;
+    color: white;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #000;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

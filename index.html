@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Inline CSS for quick reference */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #share-location-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="logosub.png" alt="Your Logo">
+        </div>
+        <h1><span class="highlight"> Welcome to ATTENDIFY </span></h1>
+        <form class="login-form" method="post" action="/">
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required maxlength="50">
+            </div>
+            <div class="input-group">
+                <label for="password">Enrollment ID</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Enter your Enrollment ID" required maxlength="13">
+                    <i class="fas fa-eye toggle-password"></i>
+                </div>
+            </div>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+            <button type="button" id="share-location-button">Verify My Location</button>
+            <button type="submit" id="mark-attendance-button" disabled>Mark My Attendance</button>
+            <div class="links">
+                <a href="https://subharti.org/">Subharti Website</a>
+                <a href="https://linktr.ee/aniket.rai">Developer</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        async function shareLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                } else {
+                    reject(new Error("Geolocation is not supported by this browser."));
+                }
+            });
+        }
+
+        async function checkLocation() {
+            const shareButton = document.getElementById('share-location-button');
+            const markButton = document.getElementById('mark-attendance-button');
+            shareButton.disabled = true;
+            shareButton.innerHTML = '<div class="loading-spinner"></div> Processing...';
+
+            try {
+                const position = await shareLocation();
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                document.getElementById('latitude').value = latitude;
+                document.getElementById('longitude').value = longitude;
+
+                const response = await fetch('/check-location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ latitude, longitude })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'valid') {
+                    shareButton.innerHTML = `Location Verified: ${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+                    markButton.disabled = false;
+                } else {
+                    shareButton.innerHTML = 'You are not in the allowed location';
+                    markButton.disabled = true;
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error(error);
+                shareButton.innerHTML = 'Share My Location';
+            } finally {
+                shareButton.disabled = false;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('share-location-button').addEventListener('click', checkLocation);
+        });
+
+        // Toggle password visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('.toggle-password');
+            const password = document.querySelector('#password');
+
+            togglePassword.addEventListener('click', function () {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
+</body>
+</html>
